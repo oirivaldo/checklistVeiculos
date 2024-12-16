@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-Out de Veículo</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Check-Out de Veículo</h2>
+        <form id="checkoutForm">
+            <div class="form-group">
+                <label for="vehicleId">ID do Veículo:</label>
+                <input type="text" class="form-control" id="vehicleId" required>
+            </div>
+            <div class="form-group">
+                <label>Itens de Checklist:</label><br>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="item1">
+                    <label class="form-check-label" for="item1">Item 1</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="item2">
+                    <label class="form-check-label" for="item2">Item 2</label>
+                </div>
+                <!-- Adicione mais itens conforme necessário -->
+            </div>
+            <div class="form-group">
+                <label for="comments">Comentários:</label>
+                <textarea class="form-control" id="comments" rows="3" placeholder="Descreva quaisquer problemas ou observações"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Confirmar Check-Out</button>
+        </form>
+    </div>
+    <script src="js/script.js"></script>
+</body>
+</html>

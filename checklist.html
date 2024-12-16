@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklist de Veículo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+  
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px;
+    }
+    
+    .container {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      margin-top: 15px;
+    }
+
+    .container img {
+      width: 100%;
+      height: auto;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    .mark {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: red;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    
+    .hidden {
+        display: none;
+    }
+    
+  </style>
+  
+
+</head>
+<body>
+  <h1 class="text-center">Checklist de Veículo</h1>
+  <div>
+  <p>Data e Hora da Inspeção:</p>
+  </div>
+  <div>
+  <span id="datetime"> ... </span>
+  </div>
+  <div class="container mt-6"></div>
+  <div class="lex-row justify-content-center">
+    <form>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="matinal" name="checkInOut" value="checkIn">
+        <label class="form-check-label" for="matinal">Matinal</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="checkIn" name="checkInOut" value="checkIn">
+        <label class="form-check-label" for="checkIn">Check-in</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" id="checkOut" name="checkInOut" value="checkOut">
+        <label class="form-check-label" for="checkOut">Check-out</label>
+      </div>
+    </form>
+  </div>
+  <div class="d-flex justify-content-center gap-3 mt-3">
+      
+    <button id="markButton" class="btn btn-danger">Marcar Avaria</button>
+    <button id="eraseButton" class="btn btn-success">Apagar Marcações</button>
+    
+  </div>
+  
+  <div class="container" id="vehicleContainer">
+    <img src="carro.jpg" alt="Imagem do Veículo">
+  </div>
+  <p class="text-center mt-2">Clique nas áreas com avarias para marcar ou apagar marcações</p>
+  
+  <div class="container mt-1">
+        <form id="checklistForm">
+            
+            <div>
+                <label for="mainDropdown">Unidade:</label>
+            </div>
+            <div>
+                <select id="mainDropdown" onchange="showConditionalDropdown()">
+                    <option value="">Selecione</option>
+                    <option value="option1">Sede Administrativa</option>
+                    <option value="option2">DIREX/CDE</option>
+                    <option value="option3">RME</option>
+                    <option value="option4">RPJ</option>
+                    <option value="option5">RVA</option>
+                    <option value="option6">RSU</option>
+                    <option value="option7">RSE</option>
+                    <option value="option8">RMN</option>
+                    <option value="option9">RNO</option>
+                    <option value="option10">RPJ</option>
+                </select>
+            </div>
+            
+            <div id="conditionalDropdown1" class="hidden">
+               <div>
+                   <label for="subDropdown1">Veículo:</label>
+               </div> 
+               <div>
+                    <select id="subDropdown1">
+                        <option value="sub23">23 - SBQ7F08 - CHEV/ONIX PLUS 10TAT LT1 - 2023/2023</option>
+                        <option value="sub24">24 - SBQ9C18 - CHEV/ONIX PLUS 10TAT LT1 - 2023/2023</option>
+                        <option value="sub25">25 - SBR0B78 - CHEV/ONIX PLUS 10TAT LT1 - 2023/2023</option>
+                        <option value="sub26">26 - SBL9D18 - FIAT/TORO VOLC AT9 4X4 - 2023/2023</option>
+                        <option value="sub27">27 - SBR4A78 - FIAT/TORO VOLC AT9 4X4 - 2023/2023</option>
+                        <option value="sub28">28 - SIA5G69 - FIAT/SCUDO CARGO TD - 2023/2023</option>
+                    </select>
+                </div>
+            </div>
+                
+            <div id="conditionalDropdown2" class="hidden">
+                <div>
+                    <label for="subDropdown2">Veículo:</label>
+                </div>
+                <div>
+                    <select id="subDropdown2">
+                        <option value="sub29">29 - RIN7A59 - CHEVROLET/S10 LT DD4A - 2023/2023</option>
+                        <option value="sub30">30 - RIN1A38 - L200 TRITON SPORT HPE-S - 2023/2023</option>
+                        <option value="sub31">31 - RSA8G46 - HILUX - 2021/2021</option>
+                        <option value="sub32">32 - RSB1E56 - HILUX - 2021/2021</option>
+                        <option value="sub33">33 - QKJ-1717 - AMAROK - 2017/2017</option>
+                        <option value="sub34">34 - RSB1E86 - HILUX - 2021/2021</option>
+                        <option value="sub35">35 - OLN8H21 - HILUX SRX PLUS - 2024/2024</option>
+                        <option value="sub36">36 - OYC7B47 - HILUX SRX PLUS - 2024/2024</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="conditionalDropdown3" class="hidden">
+                <div>
+                    <label for="subDropdown3">Veículo:</label>
+                </div>
+                <div>
+                    <select id="subDropdown3">
+                        <option value="sub4">4 - SBO2I78 - CHEV/ONIX PLUS 10TAT LT1 - 2023/2023</option>
+                        <option value="sub5">5 - SBO3F98 - CHEV/ONIX PLUS 10TAT LT1 - 2023/2023</option>
+                        <option value="sub6">6 - SBO4E28 - CHEV/ONIX PLUS 10TAT LT1 - 2023/2023</option>
+                        <option value="sub7">7 - SBO5B58 - CHEV/ONIX PLUS 10TAT LT1 - 2023/2023</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="conditionalDropdown4" class="hidden">
+                <div>
+                    <label for="subDropdown4">Veículo:</label>
+                </div>
+                <div>
+                    <select id="subDropdown4">
+                        <option value="sub14">14 - SBO7I38 - CHEV/ONIX PLUS 10TAT LT1 - 2023/2023</option>
+                        <option value="sub15">15 - RIN6D53 - CHEVROLET/S10 LS DD4 - 2023/2023</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="conditionalDropdown5" class="hidden">
+                <div>
+                    <label for="subDropdown5">Veículo:</label>
+                </div>
+                <div>
+                    <select id="subDropdown5">
+                        <option value="sub21">21 - SBQ6J58 - CHEV/ONIX PLUS 10TAT LT1 - 2023/2023</option>
+                        <option value="sub22">22 - SBR4E08 - FIAT/TORO VOLC AT9 4X4 - 2023/2023</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="conditionalDropdown6" class="hidden">
+                <div>
+                    <label for="subDropdown6">Veículo:</label>
+                </div>
+                <div>
+                    <select id="subDropdown6">
+                        <option value="sub18">18 - SBQ6A78 - CHEV/ONIX PLUS 10TAT LT1 - 2023/2023</option>
+                        <option value="sub19">19 - SBQ6F68 - CHEV/ONIX PLUS 10TAT LT1 - 2023/2023</option>
+                        <option value="sub20">20 - SBR3H58 - FIAT/TORO VOLC AT9 4X4 - 2023/2023</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="conditionalDropdown7" class="hidden">
+                <div>
+                    <label for="subDropdown7">Veículo:</label>
+                </div>
+                <div>
+                    <select id="subDropdown7">
+                        <option value="sub16">16 - SBP2H98 - CHEV/ONIX PLUS 10TAT LT1 - 2023/2023</option>
+                        <option value="sub17">17 - SBL9B18 - FIAT/TORO VOLC AT9 4X4 - 2023/2023</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="conditionalDropdown8" class="hidden">
+                <div>
+                    <label for="subDropdown8">Veículo:</label>
+                </div>
+                <div>
+                    <select id="subDropdown8">
+                        <option value="sub8">8 - SBO6B78 - CHEV/ONIX PLUS 10TAT LT1 - 2023/2023</option>
+                        <option value="sub9">9 - SBO6I18 - CHEV/ONIX PLUS 10TAT LT1 - 2023/2023</option>
+                        <option value="sub10">10 - SBG9J08 - FIAT/TORO VOLC AT9 4X4 - 2023/2023</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="conditionalDropdown9" class="hidden">
+                <div>
+                    <label for="subDropdown9">Veículo:</label>
+                </div>
+                <div>
+                    <select id="subDropdown9">
+                        <option value="sub11">11 - SBO7C78 - CHEV/ONIX PLUS 10TAT LT1 - 2023/2023</option>
+                        <option value="sub12">12 - SBO7G38 - CHEV/ONIX PLUS 10TAT LT1 - 2023/2023</option>
+                        <option value="sub13">13 - RIN6D52 - CHEVROLET/S10 LS DD4 - 2023/2023</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="conditionalDropdown10" class="hidden">
+                <div>
+                    <label for="subDropdown10">Veículo:</label>
+                </div>
+                <div>
+                    <select id="subDropdown10">
+                        <option value="sub1">1 - SBR5G38 - CHEV/ONIX PLUS 10TAT LT1 - 2023/2023</option>
+                        <option value="sub2">2 - SBO2D88 - CHEV/ONIX PLUS 10TAT LT1 - 2023/2023</option>
+                        <option value="sub3">3 - SBR4G18 - FIAT/TORO VOLC AT9 4X4 - 2023/2023</option>
+                    </select>
+                </div>
+            </div>
+            
+
+
+            <div class="form-group">
+                <label for="vehicleId">Processo SE Suite:</label>
+                <input type="text" class="form-control" id="vehicleId" required>
+            </div>
+            <div class="form-group">
+                <label>Problemas:</label><br><label>(Marque somente em caso de defeitos ou irregularidades)</label><br>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="cartao_abastecimento">
+                    <label class="form-check-label" for="cartao_abastecimento">Cartão abastecimento</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="documentos">
+                    <label class="form-check-label" for="documentos">Documentos</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="display">
+                    <label class="form-check-label" for="display">Display</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="tapetes">
+                    <label class="form-check-label" for="tapetes">Tapetes</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="estepe">
+                    <label class="form-check-label" for="estepe">Estepe</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="macaco">
+                    <label class="form-check-label" for="macaco">Macaco2</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="chave_roda">
+                    <label class="form-check-label" for="chave_roda">Chave de Roda</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="triangulo">
+                    <label class="form-check-label" for="triangulo">Triângulo</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="nivel_motor_freio">
+                    <label class="form-check-label" for="nivel_motor_freio">Nívle do óleo do motor e freio</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="nivel_agua_radiador">
+                    <label class="form-check-label" for="nivel_agua_radiador">Nível da água do radiador</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="lataria_pintura">
+                    <label class="form-check-label" for="lataria_pintura">Lataria e pintura</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="estofamento">
+                    <label class="form-check-label" for="estofamento">Estofamento</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="cintos_seguranca">
+                    <label class="form-check-label" for="cintos_seguranca">Cintos de segurança</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="controles_internos">
+                    <label class="form-check-label" for="controles_internos">Controles internos</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="instrumentos_painel">
+                    <label class="form-check-label" for="instrumentos_paintel">Instrumentos do painel</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="buzina">
+                    <label class="form-check-label" for="buzina">Buzina</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="relogio_hora_certa">
+                    <label class="form-check-label" for="relogio_hora_certa">Relógio com hora certa</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="limpador_para-brisa">
+                    <label class="form-check-label" for="limpador_para-brisa">Limpador do para-brisa</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="lavador_para-brisa">
+                    <label class="form-check-label" for="lavador_para-brisa">Lavador do para-brisa</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="limpador_vidro_traseiro">
+                    <label class="form-check-label" for="limpador_vidro_traseiro">Limpador do vidro traseiro</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="lavador_vidro_traseiro">
+                    <label class="form-check-label" for="lavador_vidro_traseiro">Lavador do vidro traseiro</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="trava_eletrica_portas">
+                    <label class="form-check-label" for="trava_eletrica_portas">Trava elétirca das portas</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="acionamento_eletrico_vidros">
+                    <label class="form-check-label" for="acionamento_eletrico_vidros">Acionamento elétrico dos vidros</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="ar-condicionado">
+                    <label class="form-check-label" for="ar-condicionado">Ar-condicionado</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="funcionamento_bancos">
+                    <label class="form-check-label" for="funcionamento_bancos">Funcionamento dos bancos</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="luzes_internas">
+                    <label class="form-check-label" for="luzes_internas">Luzes internas</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="lanternas_dianteiras_traseiras">
+                    <label class="form-check-label" for="lanternas_dianteiras_traseiras">Lanternas dianteiras e traseiras</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="farois">
+                    <label class="form-check-label" for="farois">Faróis (luz alta e baixa)</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="setas">
+                    <label class="form-check-label" for="setas">Setas</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="luz_freio">
+                    <label class="form-check-label" for="luz_freio">Luz de freio</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="luz_re">
+                    <label class="form-check-label" for="luz_re">Luz de ré</label>
+                </div>
+                
+                <!-- Adicione mais itens conforme necessário -->
+
+                <label for="comments">Comentários:</label>
+                <textarea class="form-control" id="comments" rows="3" placeholder="Descreva quaisquer problemas ou observações"></textarea>
+
+
+                <label for="condutor">Condutor:</label>
+                <div>
+                    <select id="condutor">
+                        <option value="">-- Escolha o colaborador condutor --</option>
+                    </select>
+                </div>
+              
+                <label for="responsavel">Responsável:</label>
+                <div>
+                    <select id="responsavel">
+                        <option value="">-- Escolha o responsavel pelo Check-List --</option>
+                    </select>
+                </div>
+                <div class="d-flex justify-content-center mt-4">
+                <button id="exportPDF" class="btn btn-primary">Confirmar Check-List</button>
+                </div>
+            
+
+    </div>
+        </form>
+    </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    const container = document.getElementById('vehicleContainer');
+    const markButton = document.getElementById('markButton');
+    const eraseButton = document.getElementById('eraseButton');
+    let mode = 'mark';
+
+    // Alterar cores dos botões de acordo com o modo ativo
+    function updateButtonStyles() {
+      if (mode === 'mark') {
+        markButton.classList.add('btn-danger');
+        markButton.classList.remove('btn-secondary');
+        eraseButton.classList.add('btn-secondary');
+        eraseButton.classList.remove('btn-success');
+      } else {
+        eraseButton.classList.add('btn-success');
+        eraseButton.classList.remove('btn-secondary');
+        markButton.classList.add('btn-secondary');
+        markButton.classList.remove('btn-danger');
+      }
+    }
+
+    // Alternar modo
+    markButton.addEventListener('click', () => {
+      mode = 'mark';
+      updateButtonStyles();
+    });
+
+    eraseButton.addEventListener('click', () => {
+      mode = 'erase';
+      updateButtonStyles();
+    });
+
+    // Marcar ou apagar
+    container.addEventListener('click', function(event) {
+      if (mode === 'mark') {
+        const mark = document.createElement('div');
+        mark.classList.add('mark');
+        mark.style.left = event.offsetX + 'px';
+        mark.style.top = event.offsetY + 'px';
+        container.appendChild(mark);
+      } else if (mode === 'erase') {
+        if (event.target.classList.contains('mark')) {
+          event.target.remove();
+        }
+      }
+    });
+    
+    function updateDateTime() {
+        const now = new Date();
+        const options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+        const formattedDateTime = now.toLocaleString('pt-BR', options); // Formata para português do Brasil
+    
+        document.getElementById('datetime').textContent = formattedDateTime;
+    }
+    
+    document.getElementById("checklistForm")?.addEventListener("submit", (event) => {
+        updateDateTime(); // Chama a função para atualizar inicialmente e a cada segundo
+        event.preventDefault();
+        alert("Checklist enviado com sucesso!"); 
+        // Adicione o código para salvar o checklist conforme necessário.
+    }); 
+    
+    // Seleciona o elemento do dropdown
+    const condutor = document.getElementById("condutor");
+    const responsavel = document.getElementById("responsavel");
+    
+    // Função para carregar nomes do arquivo .txt e preencher o dropdown
+    async function loadNamesFromFile() {
+        
+      try {
+        // Faz a requisição do arquivo .txt
+        const response = await fetch("nomes.txt");
+    
+        // Verifica se o arquivo foi carregado com sucesso
+        if (!response.ok) {
+          throw new Error(`Erro ao carregar o arquivo: ${response.statusText}`);
+        }
+    
+        // Lê o conteúdo do arquivo como texto
+        const text = await response.text();
+    
+        // Divide o texto em linhas (nomes) e remove linhas vazias
+        const names = text.split("\n").map(name => name.trim()).filter(name => name);
+    
+        // Preenche o dropdown com os nomes
+        names.forEach(name => {
+          const option = document.createElement("option");
+          option.value = name;
+          option.textContent = name;
+          condutor.appendChild(option);
+        });
+      } catch (error) {
+        console.error("Erro ao carregar os nomes:", error);
+      }
+    }
+    
+        // Função para carregar nomes do arquivo .txt e preencher o dropdown
+    async function loadResposaveisFromFile() {
+        
+      try {
+        // Faz a requisição do arquivo .txt
+        const response = await fetch("responsavel.txt");
+    
+        // Verifica se o arquivo foi carregado com sucesso
+        if (!response.ok) {
+          throw new Error(`Erro ao carregar o arquivo: ${response.statusText}`);
+        }
+    
+        // Lê o conteúdo do arquivo como texto
+        const text = await response.text();
+    
+        // Divide o texto em linhas (nomes) e remove linhas vazias
+        const names = text.split("\n").map(name => name.trim()).filter(name => name);
+    
+        // Preenche o dropdown com os nomes
+        names.forEach(name => {
+          const option = document.createElement("option");
+          option.value = name;
+          option.textContent = name;
+          responsavel.appendChild(option);
+        });
+      } catch (error) {
+        console.error("Erro ao carregar os nomes:", error);
+      }
+    }
+    
+    document.addEventListener("DOMContentLoaded", function() {
+    // Configurando a data e hora
+    const datetimeElement = document.getElementById("datetime");
+    const currentDate = new Date();
+    datetimeElement.textContent = currentDate.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
+    });
+
+    loadNamesFromFile(); // Chama a função ao carregar a página
+    
+    loadResposaveisFromFile() // Chama a função ao carregar a página
+
+    updateButtonStyles(); // Atualiza a aparência inicial dos botões
+
+  </script>
+  <script>
+    document.getElementById('exportPdf').addEventListener('click', async () => {
+      const { jsPDF } = window.jspdf;
+
+      // Captura o elemento HTML
+      const content = document.getElementById('content');
+
+      // Usa html2canvas para renderizar o HTML como uma imagem
+      const canvas = await html2canvas(content, { scale: 2 }); // Melhor resolução com scale
+      const imgData = canvas.toDataURL('image/png');
+
+      // Cria um PDF e adiciona a imagem capturada
+      const pdf = new jsPDF('p', 'mm', 'a4'); // Orientação: retrato, tamanho A4
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+
+      // Redimensiona a imagem para caber na página
+      const imgWidth = pdfWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+
+      // Salva o arquivo PDF
+      pdf.save('exported-content.pdf');
+    });
+  </script>
+<script src="js/script.js"></script>
+
+</body>
+
+</html>

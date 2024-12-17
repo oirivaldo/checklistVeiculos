@@ -497,14 +497,29 @@
                 // Converte o canvas em uma imagem base64
                 const imgData = canvas.toDataURL('image/png');
 
+                // Calcula a largura e altura da imagem para caber na página A4
+                const pageWidth = 595; // Largura da página A4 em mm
+                const pageHeight = 842; // Altura da página A4 em mm
+                const imgWidth = canvas.width * 0.75; // Ajuste para reduzir a imagem proporcionalmente
+                const imgHeight = canvas.height * 0.75; // Ajuste para reduzir a imagem proporcionalmente
+
+                // Ajusta a largura e altura da imagem para caber na página
+                const widthRatio = pageWidth / imgWidth;
+                const heightRatio = pageHeight / imgHeight;
+                const ratio = Math.min(widthRatio, heightRatio); // Escolhe o menor valor para manter a proporção
+
+                const finalWidth = imgWidth * ratio;
+                const finalHeight = imgHeight * ratio;
+
                 // Define o documento PDF
                 const docDefinition = {
                     content: [
                         {
                             image: imgData,
-                            width: 1500,
+                            width: finalWidth, // Ajusta a largura conforme o cálculo
+                            height: finalHeight, // Ajusta a altura conforme o cálculo
                             alignment: 'center', // Centraliza a imagem
-                            margin: [0, 20], 
+                            margin: [0, 20], // Margem superior para separar da borda
                         }
                     ]
                 };

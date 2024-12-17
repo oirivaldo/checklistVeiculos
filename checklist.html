@@ -498,26 +498,12 @@
                 // Converte o canvas em uma imagem base64
                 const imgData = canvas.toDataURL('image/png');
 
-                // Obtém o tamanho da imagem
-                const imgWidth = canvas.width;
-                const imgHeight = canvas.height;
-
-                // Definindo a largura e a altura para ajustar a imagem à página A4
-                const pageWidth = 2480; // Largura da página A4 em mm
-                const pageHeight = 3508; // Altura da página A4 em mm
-
-                // Calcula a escala de redimensionamento para caber no tamanho A4
-                const scale = Math.min(pageWidth / imgWidth, pageHeight / imgHeight);
-                const finalWidth = imgWidth * scale;
-                const finalHeight = imgHeight * scale;
-
                 // Define o documento PDF
                 const docDefinition = {
                     content: [
                         {
                             image: imgData,
-                            width: finalWidth, // Ajusta a largura conforme o cálculo
-                            height: finalHeight, // Ajusta a altura conforme o cálculo
+                            height: 3508, // Ajusta a altura conforme o cálculo
                             alignment: 'center', // Centraliza a imagem
                             margin: [0, 20], // Margem superior para separar da borda
                         }

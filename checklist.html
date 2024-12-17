@@ -519,13 +519,12 @@
                             width: finalWidth, // Ajusta a largura conforme o cálculo
                             height: finalHeight, // Ajusta a altura conforme o cálculo
                             alignment: 'center', // Centraliza a imagem
-                            margin: [0, 20], // Margem superior para separar da borda
+                            margin: [0, 5], // Margem superior para separar da borda
                         }
                     ]
                 };
 
                 // Cria o PDF e o abre em uma nova aba
-                alert("Checklist enviado com sucesso!");
                 pdfMake.createPdf(docDefinition).open();
         });
     });

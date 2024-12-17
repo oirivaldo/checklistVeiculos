@@ -51,8 +51,8 @@
     
   </style>
 </head>
-<body id="content">
-
+<body>
+<div id="content>
 
   <h1 class="text-center">Checklist de Veículo</h1>
   <div>
@@ -404,7 +404,7 @@
         </form>
     </div>
 
-
+</div>
   
   <script>
     const container = document.getElementById('vehicleContainer');
@@ -492,27 +492,27 @@
         pdfMake.createPdf(docDefinition).open(); // Abre em nova aba
         alert("Checklist enviado com sucesso!");
         **/
-       const content = document.body;
+       const content = document.getElementById("content");
 
-            html2canvas(content).then(function(canvas) {
-                // Converte o canvas em uma imagem base64
-                const imgData = canvas.toDataURL('image/png');
+       html2canvas(content).then(function(canvas) {
+          // Converte o canvas em uma imagem base64
+          const imgData = canvas.toDataURL('image/png');
 
-                // Define o documento PDF
-                const docDefinition = {
-                    content: [
-                        {
-                            image: imgData,
-                            wight: 2000, // Ajusta a altura conforme o cálculo
-                            alignment: 'center', // Centraliza a imagem
-                            margin: [0, 20], // Margem superior para separar da borda
-                        }
-                    ]
-                };
+          // Define o documento PDF
+          const docDefinition = {
+              content: [
+                  {
+                      image: imgData,
+                      wight: 1000, // Ajusta a altura conforme o cálculo
+                      alignment: 'center', // Centraliza a imagem
+                      margin: [0, 20], // Margem superior para separar da borda
+                  }
+              ]
+          };
 
-                // Cria o PDF e o abre em uma nova aba
-    
-                pdfMake.createPdf(docDefinition).open();
+          // Cria o PDF e o abre em uma nova aba
+
+          pdfMake.createPdf(docDefinition).open();
         });
     });
     

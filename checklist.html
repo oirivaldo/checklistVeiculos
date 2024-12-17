@@ -493,23 +493,22 @@
         alert("Checklist enviado com sucesso!");
         **/
         
-        html2canvas(document.body).then(function(canvas) {
+       html2canvas(content).then(function(canvas) {
                 // Converte o canvas em uma imagem base64
                 const imgData = canvas.toDataURL('image/png');
 
-                // Calcula a largura e altura da imagem para caber na página A4
+                // Obtém o tamanho da imagem
+                const imgWidth = canvas.width;
+                const imgHeight = canvas.height;
+
+                // Definindo a largura e a altura para ajustar a imagem à página A4
                 const pageWidth = 595; // Largura da página A4 em mm
                 const pageHeight = 842; // Altura da página A4 em mm
-                const imgWidth = canvas.width * 0.75; // Ajuste para reduzir a imagem proporcionalmente
-                const imgHeight = canvas.height * 0.75; // Ajuste para reduzir a imagem proporcionalmente
 
-                // Ajusta a largura e altura da imagem para caber na página
-                const widthRatio = pageWidth / imgWidth;
-                const heightRatio = pageHeight / imgHeight;
-                const ratio = Math.min(widthRatio, heightRatio); // Escolhe o menor valor para manter a proporção
-
-                const finalWidth = imgWidth * ratio;
-                const finalHeight = imgHeight * ratio;
+                // Calcula a escala de redimensionamento para caber no tamanho A4
+                const scale = Math.min(pageWidth / imgWidth, pageHeight / imgHeight);
+                const finalWidth = imgWidth * scale;
+                const finalHeight = imgHeight * scale;
 
                 // Define o documento PDF
                 const docDefinition = {
